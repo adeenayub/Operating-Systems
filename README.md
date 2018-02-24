@@ -1,5 +1,4 @@
 # Operating-Systems-Assignment-1
-Simple shell program
 Implement a simple command line shell program in C that interacts with the user in the following way. By default, the shell gives a prompt
 to the user. When the user types in a command (in response to its prompt) and hits Enter, the shell creates a child process that executes 
 the command he entered and displays the results if any. It then prompts for more user input by displaying the prompt again. 
