@@ -41,7 +41,7 @@ char** ParseCommand(char *line, char **tokenarray)
 	tokenarray = (char**) malloc(sizeof(char*));
 /*line gets tokenized based on the delimiters*/
 	token = strtok(line, " \t\r\n\a\f\v");
-	while(token!=NULL) /*going through all tokens and keeping each a place in tokenarray*/
+	while(token!=NULL) /*going through all tokens and giving each a place in tokenarray*/
 		{
 			tokenarray[index] = token;
 			index = index+1; 
