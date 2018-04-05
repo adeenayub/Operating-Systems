@@ -1,4 +1,4 @@
-//Still incomplete. 
+//Bugs removed ALhamdulillah but indentation and final touches to be given
 #include <stdio.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -51,12 +51,14 @@ int main()
 	}
 	printf("The server is listening\n");
 	clientaddr_len = sizeof(client_address);
-	new_sock = accept(sockid, (struct sockaddr *)&client_address, 							&clientaddr_len);
+	new_sock = accept(sockid, (struct sockaddr *)&client_address, &clientaddr_len);
 	if(new_sock < 0)
 	{
 		perror("Error in accepting. Connection not established.");
 		exit(1);
 	}
+	while(1)
+	{
 	if(recv(new_sock, line, BUFFSIZE, 0) < 0)
 	{
 		perror("Error in receiving the message from the client");
@@ -93,7 +95,7 @@ int main()
 	}
 		/*Emptying the contents of buffer everytime*/
 		memset(buff, 0, BUFFSIZE);
-		//}
-	//}
+		
+	}
 	
 }
