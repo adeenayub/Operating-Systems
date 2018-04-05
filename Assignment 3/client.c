@@ -1,4 +1,3 @@
-//this is buggy 
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -9,7 +8,6 @@
 #define PORT 8080
 #define BUFFSIZE 1024
 
-//int sockid;
 int skt = 0;
 struct sockaddr_in serv_address; 
 
@@ -41,21 +39,16 @@ void main()
         	printf("The client has failed to connect to server \n");
         	exit(1);
     	}
-	while(1)
-	{
+	//while(1)
+	//{
 		printf("Enter a string containing alphabets and/or numbers");
 		fgets(line, BUFFSIZE, stdin);
 		printf("%s", line);
 		len = strlen(line);
 		if(strstr(line,substr))
 		{
-			str = line;
-			printf("%s", str);
-			str+= len;
-			*str = '*';
-			printf("%s", str);
 			send(skt,line,strlen(line),0 );
 		}	
-	}
+	//}
 	
 }
