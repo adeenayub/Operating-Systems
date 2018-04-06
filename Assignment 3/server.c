@@ -1,5 +1,4 @@
-//Control C working Alhamdulillah. Gives a an interrrupted system call in the output. 
-
+//Works perfectly fine Alhamdullilah
 #include <stdio.h>
 #include <sys/socket.h>
 #include <string.h>
@@ -98,8 +97,12 @@ int main()
 		exit(1);
 	}
 	printf("The server is listening\n");
+	//sigaction(SIGINT, &sgact, NULL);
+	
 	clientaddr_len = sizeof(client_address);
-	new_sock = accept(sockid, (struct sockaddr *)&client_address, &clientaddr_len);
+	
+	
+	new_sock = accept(sockid, (struct sockaddr *)&client_address, 							&clientaddr_len);
 	if(new_sock < 0)
 	{
 		perror("Error in accepting. Connection not established.");
@@ -107,28 +110,30 @@ int main()
 	}
 	
 	sigaction(SIGINT, &sgact, NULL);
+	
 	while(1)
 	{
 		if(recv(new_sock, line, BUFFSIZE, 0) < 0)
 		{
-			perror("Error in receiving the message from the client");
-			exit(1);
+			;
 		}
-	//add func here
-		CountDigits();
-		myfile= fopen("digits.out","a");
-					
-		if(myfile!=NULL)
-		{
-			/*Printing the count of digits*/
-			fprintf(myfile,"Count is %d for line: ", counter);	
-			/*Printing the line containing the word C00L*/
-			fprintf(myfile, "%s",buff);
-			fclose(myfile);
-		}
-			/*Emptying the contents of buffer everytime*/
-			memset(buff, 0, BUFFSIZE);
 		
+		else
+		{
+			CountDigits();
+			myfile= fopen("digits.out","a");
+					
+			if(myfile!=NULL)
+			{
+				/*Printing the count of digits*/
+				fprintf(myfile,"Count is %d for line: ", counter);	
+				/*Printing the line containing the word C00L*/
+				fprintf(myfile, "%s",buff);
+				fclose(myfile);
+			}
+				/*Emptying the contents of buffer everytime*/
+				memset(buff, 0, BUFFSIZE);
+		}
 	}
 	return 0;	
 }
