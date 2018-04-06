@@ -1,9 +1,12 @@
-//Bugs removed ALhamdulillah but indentation and final touches to be given
+//Control C working Alhamdulillah. Gives a an interrrupted system call in the output. 
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <string.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <sys/wait.h>
 #include <netinet/in.h>
 #include <ctype.h> /*for isdigit*/
 #define PORT 8080
@@ -14,13 +17,58 @@ struct sockaddr_in serv_address, client_address;
 socklen_t clientaddr_len;
 char *buff;
 char *str, *line;
+int counter;
  
+void CountDigits()
+{
+	line[BUFFSIZE] = '\0';
+	counter = 0;
+	int index = 0;
+	str = line;
+	
+	while(*line!='\0')
+	{	/*Contents of str written to buff array*/
+		buff[index] = *line;
+		/*Checking if the array has a digit and if found incrementing the count*/
+		if(isdigit(buff[index]))
+		{
+			counter++;
+		}
+		index++;
+		line++; 
+			
+	}
+	
+}
+static void Readfile(const char * fname)
+{
+    FILE *f = fopen(fname, "r");    
+    if(f != NULL)
+    {
+        int ch;
+
+        while((ch = fgetc(f)) != EOF)     
+        {
+            putchar(ch);      
+        }
+        fclose(f);
+    }
+}
+
+void DisplaySum(int a)
+{
+	
+	Readfile("digits.out");
+}
+
 int main()
 {
 	line = malloc(sizeof(char)*BUFFSIZE);
 	buff = malloc(sizeof(char)*BUFFSIZE);
 	FILE * myfile;
 	int opt = 1;
+	struct sigaction sgact;
+    	sgact.sa_handler = DisplaySum;
 	myfile = fopen("digits.out", "w");
 	printf("Assalamualaikum! I am the server. Nice to see you!\n");
 	sockid = socket(AF_INET,SOCK_STREAM ,0);
@@ -57,45 +105,31 @@ int main()
 		perror("Error in accepting. Connection not established.");
 		exit(1);
 	}
+	
+	sigaction(SIGINT, &sgact, NULL);
 	while(1)
 	{
-	if(recv(new_sock, line, BUFFSIZE, 0) < 0)
-	{
-		perror("Error in receiving the message from the client");
-		exit(1);
-	}
-	line[BUFFSIZE] = '\0';
-	int counter = 0;
-	int index = 0;
-	str = line;
-	
-	while(*line!='\0')
-	{	/*Contents of str written to buff array*/
-		buff[index] = *line;
-		/*Checking if the array has a digit and if found incrementing the count*/
-		if(isdigit(buff[index]))
+		if(recv(new_sock, line, BUFFSIZE, 0) < 0)
 		{
-			counter++;
+			perror("Error in receiving the message from the client");
+			exit(1);
 		}
-		index++;
-		line++; 
-			
-	}
-				/*Prozcessor appends # so that it knows it would have to wait for new input the next time*/
-				//*line = '#';
-	myfile= fopen("digits.out","a");
+	//add func here
+		CountDigits();
+		myfile= fopen("digits.out","a");
 					
-	if(myfile!=NULL)
-	{
-		/*Printing the count of digits*/
-		fprintf(myfile,"Count is %d for line: ", counter);	
-		/*Printing the line containing the word C00L*/
-		fprintf(myfile, "%s",buff);
-		fclose(myfile);
-	}
-		/*Emptying the contents of buffer everytime*/
-		memset(buff, 0, BUFFSIZE);
+		if(myfile!=NULL)
+		{
+			/*Printing the count of digits*/
+			fprintf(myfile,"Count is %d for line: ", counter);	
+			/*Printing the line containing the word C00L*/
+			fprintf(myfile, "%s",buff);
+			fclose(myfile);
+		}
+			/*Emptying the contents of buffer everytime*/
+			memset(buff, 0, BUFFSIZE);
 		
 	}
-	
+	return 0;	
 }
+
