@@ -1,4 +1,4 @@
-//Control C working as well Alhamdulillah. This may be the final version IA. 
+//Works perfectly fine Alhamdulillah
 #include <stdio.h>
 #include <sys/socket.h>
 #include <stdlib.h>
