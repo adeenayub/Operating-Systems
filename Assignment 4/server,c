@@ -8,9 +8,32 @@
 
 FILE * myfile;
 char *line, *buff;
+
+static void Readfile(const char * fname)
+{
+    FILE *f = fopen(fname, "r");    
+    if(f != NULL)
+    {
+        int ch;
+
+        while((ch = fgetc(f)) != EOF)     
+        {
+            putchar(ch);      
+        }
+        fclose(f);
+    }
+}
+/*Gets called when control c is pressed*/
+void DisplaySum(int a)
+{
+	
+	Readfile("digits.out");
+}
+
 int * printsum_1_svc(char **str, struct svc_req * req)
 {	
-	
+	struct sigaction sgact;
+	sgact.sa_handler = DisplaySum;
 	buff = malloc(sizeof(char)*BUFFSIZE);
 	line = malloc(sizeof(char)*BUFFSIZE);
 	int counter = 0;
@@ -50,5 +73,6 @@ int * printsum_1_svc(char **str, struct svc_req * req)
 	
 	/*Emptying the contents of buffer everytime*/
 	memset(buff, 0, BUFFSIZE);
+	sigaction(SIGINT, &sgact, NULL);
 	return &result;
 }	
