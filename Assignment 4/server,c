@@ -1,0 +1,54 @@
+#include <stdio.h>
+#include <rpc/rpc.h>
+#include "dgc.h"
+#include <string.h>
+#include <ctype.h>
+
+#define BUFFSIZE 1024
+
+FILE * myfile;
+char *line, *buff;
+int * printsum_1_svc(char **str, struct svc_req * req)
+{	
+	
+	buff = malloc(sizeof(char)*BUFFSIZE);
+	line = malloc(sizeof(char)*BUFFSIZE);
+	int counter = 0;
+	strcpy(line, *str);
+	line[BUFFSIZE-1] = '\0';
+	
+	int index = 0;
+	
+	while(*line!='\0')
+	{	/*Contents of str written to buff array*/
+		buff[index] = *line;
+		/*Checking if the array has a digit and if found incrementing the count*/
+		if(isdigit(buff[index]))
+		{
+			counter++;
+		}
+		index++;
+		line++; 
+			
+	}
+	myfile= fopen("digits.out","a");
+	static int result;	
+				
+	if(myfile!=NULL)
+	{
+		/*Printing the count of digits*/
+		fprintf(myfile,"Count is %d for line: ", counter);	
+		/*Printing the line containing the word C00L*/
+		fprintf(myfile, "%s",*str);
+		fclose(myfile);
+		result = 1;
+	}
+	else
+	{
+		result = 0;
+	}
+	
+	/*Emptying the contents of buffer everytime*/
+	memset(buff, 0, BUFFSIZE);
+	return &result;
+}	
